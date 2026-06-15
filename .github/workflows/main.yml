@@ -2,12 +2,17 @@ name: actionPractice
 
 on:
  workflow_dispatch:
-
+env:
+  FIRST_NAME: Mona
 jobs:
   first_job:
+     env:
+       LAST_NAME: Singh
      name: Hello Job
      runs-on: ubuntu-24.04
      steps:
        - name: Greetings
-         run: echo "Hello World"
+         env:
+           WELL: Kemcho
+         run: echo "Hello $FIRST_NAME $ LAST_NAME $ WELL?"
 
