@@ -1,7 +1,11 @@
 name: actionPractice
 
 on:
- workflow_dispatch:
+  push:
+    branches:
+      - main
+      - release/*
+ # workflow_dispatch:
 env:
   FIRST_NAME: Mona
 jobs:
