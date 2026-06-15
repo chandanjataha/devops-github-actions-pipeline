@@ -11,6 +11,9 @@ jobs:
      name: Hello Job
      runs-on: ubuntu-24.04
      steps:
+       - name: checkout
+         uses: actions/checkout@v6.0.3
+          
        - name: Greetings
          env:
            WELL: Kemcho
