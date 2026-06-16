@@ -21,7 +21,7 @@ jobs:
        - name: Greetings
          env:
            WELL: Kemcho
-         run: echo "Hello $FIRST_NAME $LAST_NAME $WELL?"
+         run: echo "Hello, $FIRST_NAME $LAST_NAME $WELL?"
        - name: List files
          run: ls -a
 
