@@ -1,27 +1,31 @@
-name: actionPractice
+name: Run Azure Login with OIDC
+on: [push]
 
-on:
-  push:
-    branches:
-      - main
-      - release/*
- # workflow_dispatch:
-env:
-  FIRST_NAME: ${{ vars.FIRST_NAME }}
+permissions:
+  id-token: write
+  contents: read
 jobs:
-  first_job:
-     env:
-       LAST_NAME: ${{ secrets.LAST_NAME }}
-     name: Hello Job
-     runs-on: ubuntu-24.04
-     steps:
-       - name: Checkout
-         uses: actions/checkout@v6.0.3
-          
-       - name: Greetings
-         env:
-           WELL: Kemcho
-         run: echo "Hello, $FIRST_NAME $LAST_NAME $WELL?"
-       - name: List files
-         run: ls -a
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Azure login
+        uses: azure/login@v3
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          enable-AzPSSession: true
 
+      - name: Azure CLI script
+        uses: azure/cli@v2
+        with:
+          azcliversion: latest
+          inlineScript: |
+            az account show
+
+      - name: Azure PowerShell script
+        uses: azure/powershell@v3
+        with:
+          azPSVersion: "latest"
+          inlineScript: |
+            Get-AzContext
