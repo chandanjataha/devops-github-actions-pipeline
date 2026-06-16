@@ -7,11 +7,11 @@ on:
       - release/*
  # workflow_dispatch:
 env:
-  FIRST_NAME: Mona
+  FIRST_NAME: ${{ vars.FIRST_NAME }}
 jobs:
   first_job:
      env:
-       LAST_NAME: Singh
+       LAST_NAME: ${{ secrets.LAST_NAME }}
      name: Hello Job
      runs-on: ubuntu-24.04
      steps:
