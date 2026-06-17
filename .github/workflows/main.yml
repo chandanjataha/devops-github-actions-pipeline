@@ -1,4 +1,4 @@
-# File: .github/workflows/workflow.yml
+name: pr pipeline
 
 name: practice_pipeline
 on: 
