@@ -7,7 +7,7 @@ name: Run Azure Login With a Service Principal Secret
 jobs:
 
   build-and-deploy:
-    runs-on: self-hosted
+    runs-on: ubuntu-24.04-arm
     steps:
 
     - uses: azure/login@v3
