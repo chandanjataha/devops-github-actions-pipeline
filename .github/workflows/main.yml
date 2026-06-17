@@ -1,22 +1,15 @@
 # File: .github/workflows/workflow.yml
 
-on: [push]
-
-name: Run Azure Login With a Service Principal Secret
+name: practice_pipeline
+on:
+  push:
+    branches:
+      - main
 
 jobs:
-
-  build-and-deploy:
-    runs-on: ubuntu-24.04-arm
-    steps:
-
-    - uses: azure/login@v3
-      with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
-
-    - name: Azure CLI script
-      uses: azure/cli@v2
-      with:
-        azcliversion: latest
-        inlineScript: |
-          az account show
+  first_job:
+     name: first_job
+     runs-on: ubuntu-22.04
+     steps:
+       - run: echo "Hello first job"
+    
