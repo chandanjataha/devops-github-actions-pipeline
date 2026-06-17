@@ -1,5 +1,3 @@
-name: pr pipeline
-
 name: practice_pipeline
 on: 
   push:
