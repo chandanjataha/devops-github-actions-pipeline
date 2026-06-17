@@ -12,6 +12,8 @@ jobs:
      runs-on: ubuntu-22.04
      steps:
        - run: echo "Hello first job"
+       - run: cat service.yaml
+       
   second_job:
     needs: first_job
     name: second_job
@@ -19,11 +21,4 @@ jobs:
     steps:
       - run: echo "hello second job"
 
-  third_job:
-    needs:
-      - second_job
-    name: third job
-    runs-on: ubuntu-slim
-    steps:
-      - run: echo "hello 3 job"
       
