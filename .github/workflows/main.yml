@@ -14,7 +14,7 @@ jobs:
      runs-on: ubuntu-22.04
      steps:
        - run: echo "Hello first job"
-       # - run: cat service.yaml
+       
        
   second_job:
     needs: first_job
