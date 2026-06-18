@@ -1,4 +1,4 @@
-name: practice_pipeline
+name: terraform_pipeline
 on: 
   push:
     branches:
@@ -6,12 +6,24 @@ on:
   pull_request: 
       branches:
         - develop
+env:
+   ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+   ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+   ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+   ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET}}
+
 jobs:
   terraform_job:
      name: Terraform job
      runs-on: ubuntu-22.04
 
      steps:
+       - name: HashiCorp - Setup Terraform
+         uses: hashicorp/setup-terraform@v2.0.3
+         
+       - name: Checkout
+         uses: actions/checkout@v6.0.3 
+         
        - name: terraform init
          run: terraform init
 
