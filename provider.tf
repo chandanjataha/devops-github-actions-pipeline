@@ -7,11 +7,11 @@ terraform {
     }
 }
 
-provider "azurem"{
+provider "azurerm"{
     features {}
     
 }
-resource "azurerm_resource_ggroup" "az"{
+resource "azurerm_resource_group" "az"{
     name = "rg-dev-north-europe"
     location = "North Europe"
 }
