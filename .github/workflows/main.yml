@@ -7,19 +7,19 @@ on:
       branches:
         - develop
 jobs:
-  first_job:
-     name: first_job
+  terraform_job:
+     name: Terraform job
      runs-on: ubuntu-22.04
+
      steps:
-       - run: echo "Hello first job"
-       
-       
-  second_job:
-    needs: first_job
-    name: second_job
-    runs-on: ubuntu-24.04
-    if: always()
-    steps:
-      - run: echo "hello second job"
+       - name: terraform init
+         run: terraform init
+
+       - name: terraform validate
+         run: terraform validate
+
+       - name: terraform plan
+         run: terraform plan
+    
 
       
