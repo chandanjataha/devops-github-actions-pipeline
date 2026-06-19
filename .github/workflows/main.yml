@@ -56,7 +56,7 @@ jobs:
     name: Terraform Init & Plan
     needs: terraform_scan
 
-    if: github.event_name == 'pull_request'
+    # if: github.event_name == 'pull_request'
 
     runs-on: ubuntu-latest
     environment:
@@ -85,7 +85,7 @@ jobs:
 
     needs: terraform_scan
 
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    # if: github.event_name == 'push' && github.ref == 'refs/heads/main'
 
     runs-on: ubuntu-latest
 
