@@ -1,29 +1,100 @@
-# File: .github/workflows/workflow.yml
+name: Terraform CI/CD
 
-name: Run Azure Login with OIDC
-on: 
+on:
+  pull_request:
+    branches:
+      - develop
+      - main
+
   push:
     branches:
       - main
-       
-    
+
 permissions:
   id-token: write
   contents: read
-jobs:
-  build-and-deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Azure login
-        uses: azure/login@v3
-        with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-      - name: Azure CLI script
-        uses: azure/cli@v2
-        with:
-          azcliversion: latest
-          inlineScript: |
-            az account show
+env:
+  ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+  ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+  ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+  ARM_USE_OIDC: true
+
+jobs:
+
+# ==================================
+# SCAN JOB
+# Runs for PR and Main
+# ==================================
+  terraform_scan:
+    name: Terraform Scan
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: hashicorp/setup-terraform@v4
+
+      - name: Setup TFLint
+        uses: terraform-linters/setup-tflint@v4
+
+      - name: Run TFLint
+        run: tflint --recursive
+        continue-on-error: true
+
+      - name: Run tfsec
+        uses: aquasecurity/tfsec-action@v1.0.3
+        continue-on-error: true
+
+# ==================================
+# PR VALIDATION
+# Only Pull Request
+# ==================================
+  terraform_init_plan:
+    name: Terraform Init & Plan
+    needs: terraform_scan
+
+    if: github.event_name == 'pull_request'
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: hashicorp/setup-terraform@v4
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Validate
+        run: terraform validate
+
+      - name: Terraform Plan
+        run: terraform plan
+
+# ==================================
+# MAIN DEPLOYMENT
+# Only Main Branch
+# ==================================
+  terraform_init_apply:
+    name: Terraform Init & Apply
+
+    needs: terraform_scan
+
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+    runs-on: ubuntu-latest
+
+    environment:
+      name: dev
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: hashicorp/setup-terraform@v4
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Apply
+        run: terraform apply -auto-approve
