@@ -102,3 +102,39 @@ jobs:
 
       - name: Terraform Apply
         run: terraform apply -auto-approve
+
+  terraform_output:
+    name: Terraform Output & Resource Details
+
+    needs: terraform_init_apply
+
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+    runs-on: ubuntu-latest
+
+    environment:
+      name: develop
+
+    steps:
+
+      - uses: actions/checkout@v4
+
+      - uses: hashicorp/setup-terraform@v4
+
+      - name: Azure Login using OIDC
+        uses: azure/login@v3
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Outputs
+        run: terraform output
+
+      - name: Show Azure Resources
+        run: |
+          az group list --output table
+          az resource list --output table
