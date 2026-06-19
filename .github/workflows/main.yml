@@ -29,6 +29,8 @@ jobs:
   terraform_scan:
     name: Terraform Scan
     runs-on: ubuntu-latest
+    environment:
+      name: develop
 
     steps:
       - uses: actions/checkout@v4
@@ -57,6 +59,8 @@ jobs:
     if: github.event_name == 'pull_request'
 
     runs-on: ubuntu-latest
+    environment:
+      name: develop
 
     steps:
       - uses: actions/checkout@v4
